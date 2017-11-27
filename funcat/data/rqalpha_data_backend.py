@@ -49,7 +49,8 @@ class RQAlphaDataBackend(DataBackend):
         start = get_date_from_int(start)
         end = get_date_from_int(end)
 
-        bar_count = (end - start).days
+        # 使用交易日，而不用自然日
+        bar_count = len(self.data_proxy.get_trading_dates(start, end))
 
         bars = self.data_proxy.history_bars(
             order_book_id, bar_count, freq, field=None,
@@ -62,7 +63,7 @@ class RQAlphaDataBackend(DataBackend):
         return bars
 
     def get_order_book_id_list(self):
-        """获取所有的
+        """获取所有的股票代码
         """
         import pandas as pd
         insts = self.data_proxy.all_instruments("CS")
